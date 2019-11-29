@@ -5,19 +5,22 @@ public class EnemyContainer : MonoBehaviour
 {
     //--------------------------------------------------------------------------
     // Enemies
-    [SerializeField] List<GameObject> enemyTypeByRow = new List<GameObject>();
+    [SerializeField] List<Enemy> enemyTypeByRow = new List<Enemy>();
     [SerializeField] int numEnemiesPerRow = 11;
     [SerializeField] float spacingX = 0.8f;
     [SerializeField] float spacingY = 0.8f;
-    private GameObject[,] enemies;
+    private Enemy[,] enemies;
+    public int numActiveEnemies;
 
     // Horizontal Motion
     // Enemy Container moves as a whole, taking all enemies with it
     // Moves from side-to-side
-    [SerializeField] float speed = 2.5f;
+    [SerializeField] float initalSpeed = 1.5f;
+    [SerializeField] float maxSpeed = 10.0f;
     [SerializeField] float initialXDirection = 1.0f;
     [SerializeField] float startXPos = 0.0f;
     [SerializeField] float xExtent = 2.2f;
+    private float currentSpeed;
     private float currentXDirection;
 
     // Vertical Motion
@@ -28,28 +31,58 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] float endYPos = 0.0f;
 
     //--------------------------------------------------------------------------
+    public void OnEnemyDestroyed()
+    {
+        --numActiveEnemies;
+
+        // Adjust speed (speed up as less enemies available)
+        int numRows = enemyTypeByRow.Count;
+        float maxEnemies = numRows * numEnemiesPerRow;
+        float t = 1.0f - (numActiveEnemies / maxEnemies);
+        currentSpeed = Mathf.Lerp(initalSpeed, maxSpeed, t);
+
+        if (numActiveEnemies <= 0)
+        {
+            // TODO: Handle clearing the round
+            InitRound();
+        }
+    }
+
+    //--------------------------------------------------------------------------
     void Start()
     {
-        currentXDirection = initialXDirection;
-
         // Create and position enemy ships
         int numRows = enemyTypeByRow.Count;
-        enemies = new GameObject[numRows, numEnemiesPerRow];
+        enemies = new Enemy[numRows, numEnemiesPerRow];
         for (int row = 0; row < numRows; row++)
         {
             for (int col = 0; col < numEnemiesPerRow; col++)
             {
                 enemies[row, col] = Instantiate(enemyTypeByRow[row],
-                    new Vector2(enemyPosX(col), enemyPosY(row)),
+                    new Vector2(EnemyPosX(col), EnemyPosY(row)),
                     Quaternion.identity);
+                enemies[row, col].container = this;
                 enemies[row, col].transform.parent = this.transform;
             }
         }
+
+        InitRound();
+    }
+
+    //--------------------------------------------------------------------------
+    void InitRound()
+    {
+        currentSpeed = initalSpeed;
+        currentXDirection = initialXDirection;
+
+        int numRows = enemyTypeByRow.Count;
+        numActiveEnemies = numRows * numEnemiesPerRow;
+
         transform.position = new Vector2(startXPos, startYPos);
     }
 
     //--------------------------------------------------------------------------
-    float enemyPosX(int column)
+    float EnemyPosX(int column)
     {
         float halfShipCount = -(numEnemiesPerRow / 2)
             + ((numEnemiesPerRow % 2 == 0) ? 0.5f : 0.0f);
@@ -58,7 +91,7 @@ public class EnemyContainer : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------
-    float enemyPosY(int row)
+    float EnemyPosY(int row)
     {
         return -row * spacingY;
     }
@@ -66,7 +99,7 @@ public class EnemyContainer : MonoBehaviour
     //--------------------------------------------------------------------------
     void Update()
     {
-        var deltaX = Time.deltaTime * speed * currentXDirection;
+        var deltaX = Time.deltaTime * currentSpeed * currentXDirection;
         var newXPos = transform.position.x + deltaX;
         var newYPos = transform.position.y;
         if (Mathf.Abs(newXPos) > xExtent)
