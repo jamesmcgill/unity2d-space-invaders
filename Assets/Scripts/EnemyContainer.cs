@@ -3,37 +3,67 @@ using UnityEngine;
 
 public class EnemyContainer : MonoBehaviour
 {
+    //--------------------------------------------------------------------------
     // Enemies
-    private List<GameObject> enemies;
-    private int numEnemiesPerRow = 11;
-    private int numRows = 5;
+    [SerializeField] List<GameObject> enemyTypeByRow = new List<GameObject>();
+    [SerializeField] int numEnemiesPerRow = 11;
+    [SerializeField] float spacingX = 0.8f;
+    [SerializeField] float spacingY = 0.8f;
+    private GameObject[,] enemies;
 
     // Horizontal Motion
     // Enemy Container moves as a whole, taking all enemies with it
     // Moves from side-to-side
-    [SerializeField] float speed = 1.1f;
+    [SerializeField] float speed = 2.5f;
     [SerializeField] float initialXDirection = 1.0f;
     [SerializeField] float startXPos = 0.0f;
-    [SerializeField] float xExtent = 5.0f;
+    [SerializeField] float xExtent = 2.2f;
     private float currentXDirection;
 
     // Vertical Motion
     // Enemies move down in steps (after when reaching the xExtent)
     // Round finished when reaching bottom (endYPos)
     [SerializeField] float yStep = 0.5f;
-    [SerializeField] float startYPos = 1.0f;
-    [SerializeField] float endYPos = -3.0f;
+    [SerializeField] float startYPos = 4.0f;
+    [SerializeField] float endYPos = 0.0f;
 
-    // Start is called before the first frame update
+    //--------------------------------------------------------------------------
     void Start()
     {
-        transform.position = new Vector2(startXPos, startYPos);
         currentXDirection = initialXDirection;
 
-        // TODO: Create list of enemies
+        // Create and position enemy ships
+        int numRows = enemyTypeByRow.Count;
+        enemies = new GameObject[numRows, numEnemiesPerRow];
+        for (int row = 0; row < numRows; row++)
+        {
+            for (int col = 0; col < numEnemiesPerRow; col++)
+            {
+                enemies[row, col] = Instantiate(enemyTypeByRow[row],
+                    new Vector2(enemyPosX(col), enemyPosY(row)),
+                    Quaternion.identity);
+                enemies[row, col].transform.parent = this.transform;
+            }
+        }
+        transform.position = new Vector2(startXPos, startYPos);
     }
 
-    // Update is called once per frame
+    //--------------------------------------------------------------------------
+    float enemyPosX(int column)
+    {
+        float halfShipCount = -(numEnemiesPerRow / 2)
+            + ((numEnemiesPerRow % 2 == 0) ? 0.5f : 0.0f);
+        float firstColumnPosX = halfShipCount * spacingX;
+        return firstColumnPosX + (spacingX * column);
+    }
+
+    //--------------------------------------------------------------------------
+    float enemyPosY(int row)
+    {
+        return -row * spacingY;
+    }
+
+    //--------------------------------------------------------------------------
     void Update()
     {
         var deltaX = Time.deltaTime * speed * currentXDirection;
@@ -51,4 +81,6 @@ public class EnemyContainer : MonoBehaviour
         }
         transform.position = new Vector2(newXPos, newYPos);
     }
+
+    //--------------------------------------------------------------------------
 }
