@@ -15,7 +15,7 @@ public class EnemyContainer : MonoBehaviour
 
     [Header("Shot timer")]
     [SerializeField] float minTimeBetweenShots = 0.2f;
-    [SerializeField] float maxTimeBetweenShots = 2.0f;
+    [SerializeField] float maxTimeBetweenShots = 1.5f;
     [SerializeField] float shotSpeed = 10.0f;
     float shotCounter;
 
