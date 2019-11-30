@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 1024388175}
   - component: {fileID: 1024388174}
   - component: {fileID: 1024388173}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,15 +397,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTypeByRow:
-  - {fileID: 3250382200186409739, guid: fb28676af09e64545bbf1482d2c194ae, type: 3}
-  - {fileID: 3250382200186409739, guid: ebf7ad53f7fd21a4bb40fe41961f979e, type: 3}
-  - {fileID: 3250382200186409739, guid: ebf7ad53f7fd21a4bb40fe41961f979e, type: 3}
-  - {fileID: 3250382200186409739, guid: d12ec9931561493449993c2a79995c38, type: 3}
-  - {fileID: 3250382200186409739, guid: d12ec9931561493449993c2a79995c38, type: 3}
+  - {fileID: 7033670242869767600, guid: fb28676af09e64545bbf1482d2c194ae, type: 3}
+  - {fileID: 1952949374434744950, guid: ebf7ad53f7fd21a4bb40fe41961f979e, type: 3}
+  - {fileID: 1952949374434744950, guid: ebf7ad53f7fd21a4bb40fe41961f979e, type: 3}
+  - {fileID: 3178165646823867639, guid: d12ec9931561493449993c2a79995c38, type: 3}
+  - {fileID: 3178165646823867639, guid: d12ec9931561493449993c2a79995c38, type: 3}
   numEnemiesPerRow: 11
   spacingX: 0.8
   spacingY: 0.8
-  speed: 2.5
+  shotPrefab: {fileID: 4226315340602802277, guid: 0f95350bef16f0047b4c5ca1f3d3a976,
+    type: 3}
+  minTimeBetweenShots: 0.2
+  maxTimeBetweenShots: 2
+  shotSpeed: 10
+  initalSpeed: 1.5
+  maxSpeed: 10
   initialXDirection: 1
   startXPos: 0
   xExtent: 2.2
@@ -437,7 +443,7 @@ GameObject:
   - component: {fileID: 1582789097}
   - component: {fileID: 1582789096}
   m_Layer: 0
-  m_Name: black
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

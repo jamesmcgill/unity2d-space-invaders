@@ -2,20 +2,20 @@
 
 public class player : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 20.0f;
-    [SerializeField] private float padding = 1.0f;
-    [SerializeField] private GameObject shotPrefab;
-    [SerializeField] private float shotSpeed = 10.0f;
+    [SerializeField] float moveSpeed = 20.0f;
+    [SerializeField] float padding = 1.0f;
+    [SerializeField] GameObject shotPrefab;
+    [SerializeField] float shotSpeed = 10.0f;
+    float xMax;
+    float xMin;
 
-    private float xMax;
-    private float xMin;
-
-    // Start is called before the first frame update
+    //--------------------------------------------------------------------------
     void Start()
     {
         SetupBoundaries();
     }
 
+    //--------------------------------------------------------------------------
     private void SetupBoundaries()
     {
         Camera camera = Camera.main;
@@ -23,7 +23,7 @@ public class player : MonoBehaviour
         xMax = camera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x - padding;
     }
 
-    // Update is called once per frame
+    //--------------------------------------------------------------------------
     void Update()
     {
         Move();
@@ -33,6 +33,7 @@ public class player : MonoBehaviour
         }
     }
 
+    //--------------------------------------------------------------------------
     private void Move()
     {
         var deltaX = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
@@ -40,10 +41,15 @@ public class player : MonoBehaviour
         transform.position = new Vector2(newXPos, transform.position.y);
     }
 
+    //--------------------------------------------------------------------------
     private void Shoot()
     {
-        GameObject shot =
-            Instantiate(shotPrefab, transform.position, Quaternion.identity) as GameObject;
+        GameObject shot = Instantiate(
+            shotPrefab,
+            transform.position,
+            Quaternion.identity) as GameObject;
         shot.GetComponent<Rigidbody2D>().velocity = new Vector2(0, shotSpeed);
     }
+
+    //--------------------------------------------------------------------------
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7946032093335832052}
   - component: {fileID: 7946032093335832053}
   - component: {fileID: 7946032093335832010}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ShotsBoundary
   m_TagString: Untagged
   m_Icon: {fileID: 0}

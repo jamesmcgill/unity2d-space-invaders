@@ -4,15 +4,22 @@ using UnityEngine;
 public class EnemyContainer : MonoBehaviour
 {
     //--------------------------------------------------------------------------
-    // Enemies
+    [Header("Enemies")]
     [SerializeField] List<Enemy> enemyTypeByRow = new List<Enemy>();
     [SerializeField] int numEnemiesPerRow = 11;
     [SerializeField] float spacingX = 0.8f;
     [SerializeField] float spacingY = 0.8f;
-    private Enemy[,] enemies;
-    public int numActiveEnemies;
+    [SerializeField] GameObject shotPrefab;
+    Enemy[,] enemies;
+    int numActiveEnemies;
 
-    // Horizontal Motion
+    [Header("Shot timer")]
+    [SerializeField] float minTimeBetweenShots = 0.2f;
+    [SerializeField] float maxTimeBetweenShots = 2.0f;
+    [SerializeField] float shotSpeed = 10.0f;
+    float shotCounter;
+
+    [Header("Horizontal Motion")]
     // Enemy Container moves as a whole, taking all enemies with it
     // Moves from side-to-side
     [SerializeField] float initalSpeed = 1.5f;
@@ -20,15 +27,18 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] float initialXDirection = 1.0f;
     [SerializeField] float startXPos = 0.0f;
     [SerializeField] float xExtent = 2.2f;
-    private float currentSpeed;
-    private float currentXDirection;
+    float currentSpeed;
+    float currentXDirection;
 
-    // Vertical Motion
+    [Header("Vertical Motion")]
     // Enemies move down in steps (after when reaching the xExtent)
     // Round finished when reaching bottom (endYPos)
     [SerializeField] float yStep = 0.5f;
     [SerializeField] float startYPos = 4.0f;
     [SerializeField] float endYPos = 0.0f;
+
+    //--------------------------------------------------------------------------
+    public GameObject GetShotPrefab() { return shotPrefab; }
 
     //--------------------------------------------------------------------------
     public void OnEnemyDestroyed()
@@ -72,6 +82,8 @@ public class EnemyContainer : MonoBehaviour
     //--------------------------------------------------------------------------
     void InitRound()
     {
+        ResetShotCounter();
+
         currentSpeed = initalSpeed;
         currentXDirection = initialXDirection;
 
@@ -99,6 +111,8 @@ public class EnemyContainer : MonoBehaviour
     //--------------------------------------------------------------------------
     void Update()
     {
+        TickShotCounter();
+
         var deltaX = Time.deltaTime * currentSpeed * currentXDirection;
         var newXPos = transform.position.x + deltaX;
         var newYPos = transform.position.y;
@@ -113,6 +127,82 @@ public class EnemyContainer : MonoBehaviour
             }
         }
         transform.position = new Vector2(newXPos, newYPos);
+    }
+
+    //--------------------------------------------------------------------------
+    void ResetShotCounter()
+    {
+        shotCounter = Random.Range(minTimeBetweenShots, maxTimeBetweenShots);
+    }
+
+    //--------------------------------------------------------------------------
+    void TickShotCounter()
+    {
+        shotCounter -= Time.deltaTime;
+        if (shotCounter <= 0.0f)
+        {
+            Shoot();
+            ResetShotCounter();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    void Shoot()
+    {
+        Enemy shooter = FindEnemyThatCanShoot();
+        if (!shooter) { return; }
+
+        GameObject shot = Instantiate(
+            GetShotPrefab(),
+            shooter.transform.position,
+            Quaternion.identity) as GameObject;
+        shot.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -shotSpeed);
+    }
+
+    //--------------------------------------------------------------------------
+    // Find a random enemy who is at the the head of a column and still alive
+    // That is, if any are left alive. Otherwise returns null.
+    //--------------------------------------------------------------------------
+    Enemy FindEnemyThatCanShoot()
+    {
+        // Only the lead enemy of a column shoots, therefore it's effectively
+        // as if the column shoots
+        int column = Random.Range(0, numEnemiesPerRow - 1);
+
+        // Search for an available leading enemy from that column, then try
+        // the adjacent columns if not found
+        for (int attempts = 0; attempts < numEnemiesPerRow; ++attempts)
+        {
+            var enemy = FindLeadingEnemyForColumn(column);
+            if (enemy)
+            {
+                return enemy;
+            }
+
+            ++column;
+            if (column >= numEnemiesPerRow)
+            {
+                column = 0;
+            }
+        }
+        return null;
+    }
+
+    //--------------------------------------------------------------------------
+    // Find the leading enemy of the given column
+    // That is, if any are left alive. Otherwise returns null.
+    //--------------------------------------------------------------------------
+    Enemy FindLeadingEnemyForColumn(int column)
+    {
+        int numRows = enemyTypeByRow.Count;
+        for (int row = numRows - 1; row >= 0; --row)
+        {
+            if (enemies[row, column])
+            {
+                return enemies[row, column];
+            }
+        }
+        return null;
     }
 
     //--------------------------------------------------------------------------
