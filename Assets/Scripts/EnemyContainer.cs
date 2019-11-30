@@ -9,8 +9,8 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] int numEnemiesPerRow = 11;
     [SerializeField] float spacingX = 0.8f;
     [SerializeField] float spacingY = 0.8f;
-    [SerializeField] GameObject shotPrefab;
-    [SerializeField] GameObject explosionPrefab;
+    [SerializeField] GameObject shotPrefab = null;
+    [SerializeField] GameObject explosionPrefab = null;
     [SerializeField] float explosionLifeTime = 4.0f;
     Enemy[,] enemies;
     int numActiveEnemies;

@@ -4,9 +4,9 @@ public class player : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 20.0f;
     [SerializeField] float padding = 1.0f;
-    [SerializeField] GameObject shotPrefab;
+    [SerializeField] GameObject shotPrefab = null;
     [SerializeField] float shotSpeed = 10.0f;
-    [SerializeField] GameObject explosionPrefab;
+    [SerializeField] GameObject explosionPrefab = null;
     [SerializeField] float explosionLifeTime = 4.0f;
     float xMax;
     float xMin;
@@ -68,6 +68,7 @@ public class player : MonoBehaviour
             transform.position,
             transform.rotation);
         Destroy(explosion, explosionLifeTime);
+        FindObjectOfType<Level>().LoadGameOver();
     }
 
     //--------------------------------------------------------------------------
