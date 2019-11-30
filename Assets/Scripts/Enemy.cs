@@ -8,10 +8,22 @@ public class Enemy : MonoBehaviour
     //--------------------------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
+        OnDestroyed();
         Destroy(gameObject);
         Destroy(other.gameObject);
         container.OnEnemyDestroyed();
     }
 
     //--------------------------------------------------------------------------
+    void OnDestroyed()
+    {
+        GameObject explosion = Instantiate(
+            container.GetExplosionPrefab(),
+            transform.position,
+            transform.rotation);
+        Destroy(explosion, container.GetExplosionLifeTime());
+    }
+
+    //--------------------------------------------------------------------------
+
 }

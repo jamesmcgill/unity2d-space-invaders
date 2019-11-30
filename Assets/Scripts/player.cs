@@ -6,6 +6,8 @@ public class player : MonoBehaviour
     [SerializeField] float padding = 1.0f;
     [SerializeField] GameObject shotPrefab;
     [SerializeField] float shotSpeed = 10.0f;
+    [SerializeField] GameObject explosionPrefab;
+    [SerializeField] float explosionLifeTime = 4.0f;
     float xMax;
     float xMin;
 
@@ -54,7 +56,18 @@ public class player : MonoBehaviour
     //--------------------------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
+        OnDestroyed();
         Destroy(gameObject);
+    }
+
+    //--------------------------------------------------------------------------
+    void OnDestroyed()
+    {
+        GameObject explosion = Instantiate(
+            explosionPrefab,
+            transform.position,
+            transform.rotation);
+        Destroy(explosion, explosionLifeTime);
     }
 
     //--------------------------------------------------------------------------

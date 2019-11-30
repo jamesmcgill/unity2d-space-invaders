@@ -374,6 +374,9 @@ MonoBehaviour:
   shotPrefab: {fileID: 6805888179439577311, guid: c8d384693c64f62429dca4af592bc51a,
     type: 3}
   shotSpeed: 10
+  explosionPrefab: {fileID: 8552989077067164838, guid: 32e6ef36f8adfcc4d909b6a60d281e5c,
+    type: 3}
+  explosionLifeTime: 4
 --- !u!212 &1024388174
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -493,6 +496,9 @@ MonoBehaviour:
   spacingY: 0.8
   shotPrefab: {fileID: 4226315340602802277, guid: 0f95350bef16f0047b4c5ca1f3d3a976,
     type: 3}
+  explosionPrefab: {fileID: 8552989077067164838, guid: 32e6ef36f8adfcc4d909b6a60d281e5c,
+    type: 3}
+  explosionLifeTime: 4
   minTimeBetweenShots: 0.2
   maxTimeBetweenShots: 1.5
   shotSpeed: 10

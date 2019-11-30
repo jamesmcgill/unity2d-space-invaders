@@ -10,6 +10,8 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] float spacingX = 0.8f;
     [SerializeField] float spacingY = 0.8f;
     [SerializeField] GameObject shotPrefab;
+    [SerializeField] GameObject explosionPrefab;
+    [SerializeField] float explosionLifeTime = 4.0f;
     Enemy[,] enemies;
     int numActiveEnemies;
 
@@ -39,6 +41,8 @@ public class EnemyContainer : MonoBehaviour
 
     //--------------------------------------------------------------------------
     public GameObject GetShotPrefab() { return shotPrefab; }
+    public GameObject GetExplosionPrefab() { return explosionPrefab; }
+    public float GetExplosionLifeTime() { return explosionLifeTime; }
 
     //--------------------------------------------------------------------------
     public void OnEnemyDestroyed()
