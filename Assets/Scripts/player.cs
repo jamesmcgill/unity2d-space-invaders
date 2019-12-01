@@ -4,15 +4,20 @@ public class player : MonoBehaviour
 {
     GameSession gameSession;
 
+    [Header("Movement")]
     [SerializeField] float moveSpeed = 20.0f;
     [SerializeField] float padding = 1.0f;
+    float xMax;
+    float xMin;
+
+    [Header("Shots")]
     [SerializeField] GameObject shotPrefab = null;
     [SerializeField] float shotSpeed = 10.0f;
+
+    [Header("Death")]
     [SerializeField] GameObject explosionPrefab = null;
     [SerializeField] float explosionLifeTime = 4.0f;
     [SerializeField] float respawnDelayInSeconds = 1.0f;
-    float xMax;
-    float xMin;
 
     //--------------------------------------------------------------------------
     void Start()

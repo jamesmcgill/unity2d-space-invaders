@@ -49,9 +49,8 @@ public class EnemyContainer : MonoBehaviour
     //--------------------------------------------------------------------------
     public void OnEnemyDestroyed(int points)
     {
-        gameSession.AddPoints(points);
-
         --numActiveEnemies;
+        gameSession.AddPoints(points);
 
         // Adjust speed (speed up as less enemies available)
         int numRows = enemyTypeByRow.Count;

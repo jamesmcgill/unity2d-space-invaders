@@ -36,6 +36,17 @@ public class LivesDisplay : MonoBehaviour
             }
             lifeIcons.RemoveRange(numLives, numIcons - numLives);
         }
+        else if (numIcons < numLives)
+        {
+            for (int i = numIcons; i < numLives; ++i)
+            {
+                lifeIcons.Add(Instantiate(
+                    livesIconPrefab,
+                    new Vector3(posX + (i * spacing), posY, 0),
+                    Quaternion.identity));
+            }
+
+        }
     }
 
     //--------------------------------------------------------------------------

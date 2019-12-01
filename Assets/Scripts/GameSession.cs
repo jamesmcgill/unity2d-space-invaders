@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class GameSession : MonoBehaviour
 {
+    [SerializeField] int extraLifeAfterScore = 10000;
     [SerializeField] int initialLives = 3;
     int currentScore = 0;
+    int extraLifeCounter = 0;
     int currentLives;
 
     //--------------------------------------------------------------------------
@@ -26,7 +28,9 @@ public class GameSession : MonoBehaviour
     //--------------------------------------------------------------------------
     private void Start()
     {
+        currentScore = 0;
         currentLives = initialLives;
+        extraLifeCounter = 0;
     }
 
     //--------------------------------------------------------------------------
@@ -42,9 +46,19 @@ public class GameSession : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------
-    public void AddPoints(int points)
+    public int AddPoints(int points)
     {
         currentScore += points;
+
+        // Player gets an extra life bonus after reaching a score
+        if (currentScore >= ((extraLifeCounter + 1) * extraLifeAfterScore))
+        {
+            extraLifeCounter++;
+            int numLifes = IncrementLivesLeft();
+            FindObjectOfType<LivesDisplay>()?.SetNumLives(numLifes);
+        }
+
+        return currentScore;
     }
 
     //--------------------------------------------------------------------------
@@ -62,11 +76,18 @@ public class GameSession : MonoBehaviour
     //--------------------------------------------------------------------------
     public int DecrementLivesLeft()
     {
-        if (currentScore > 0)
+        if (currentLives > 0)
         {
             --currentLives;
         }
         return currentLives;
+    }
+
+    //--------------------------------------------------------------------------
+    public int IncrementLivesLeft()
+    {
+        return ++currentLives;
+
     }
 
     //--------------------------------------------------------------------------
