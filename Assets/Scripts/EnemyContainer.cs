@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyContainer : MonoBehaviour
 {
     //--------------------------------------------------------------------------
-    [SerializeField] GameSession gameSession;
+    GameSession gameSession;
 
     [Header("Enemies")]
     [SerializeField] List<Enemy> enemyTypeByRow = new List<Enemy>();

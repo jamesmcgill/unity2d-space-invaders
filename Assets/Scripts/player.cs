@@ -2,18 +2,22 @@
 
 public class player : MonoBehaviour
 {
+    GameSession gameSession;
+
     [SerializeField] float moveSpeed = 20.0f;
     [SerializeField] float padding = 1.0f;
     [SerializeField] GameObject shotPrefab = null;
     [SerializeField] float shotSpeed = 10.0f;
     [SerializeField] GameObject explosionPrefab = null;
     [SerializeField] float explosionLifeTime = 4.0f;
+    [SerializeField] float respawnDelayInSeconds = 1.0f;
     float xMax;
     float xMin;
 
     //--------------------------------------------------------------------------
     void Start()
     {
+        gameSession = FindObjectOfType<GameSession>();
         SetupBoundaries();
     }
 
@@ -57,18 +61,29 @@ public class player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         OnDestroyed();
-        Destroy(gameObject);
     }
 
     //--------------------------------------------------------------------------
     void OnDestroyed()
     {
+        int numLifes = gameSession.DecrementLivesLeft();
+        FindObjectOfType<LivesDisplay>().SetNumLives(numLifes);
+
+        if (numLifes == 0)
+        {
+            FindObjectOfType<Level>().LoadGameOver();
+        }
+        else
+        {
+            gameSession.WaitThenActivate(respawnDelayInSeconds, gameObject);
+        }
+        gameObject.SetActive(false);
+
         GameObject explosion = Instantiate(
             explosionPrefab,
             transform.position,
             transform.rotation);
         Destroy(explosion, explosionLifeTime);
-        FindObjectOfType<Level>().LoadGameOver();
     }
 
     //--------------------------------------------------------------------------
