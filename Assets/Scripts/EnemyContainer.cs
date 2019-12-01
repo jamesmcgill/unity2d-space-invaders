@@ -20,14 +20,14 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] GameObject shotPrefab = null;
     [SerializeField] float minTimeBetweenShots = 0.2f;
     [SerializeField] float maxTimeBetweenShots = 1.5f;
-    [SerializeField] float shotSpeed = 10.0f;
+    [SerializeField] float shotSpeed = 5.0f;
     float shotCounter;
 
     [Header("Horizontal Motion")]
     // Enemy Container moves as a whole, taking all enemies with it
     // Moves from side-to-side
-    [SerializeField] float initalSpeed = 1.5f;
-    [SerializeField] float maxSpeed = 10.0f;
+    [SerializeField] float initalSpeed = 1.0f;
+    [SerializeField] float maxSpeed = 8.0f;
     [SerializeField] float initialXDirection = 1.0f;
     [SerializeField] float startXPos = 0.0f;
     [SerializeField] float xExtent = 2.2f;
@@ -37,9 +37,9 @@ public class EnemyContainer : MonoBehaviour
     [Header("Vertical Motion")]
     // Enemies move down in steps (after when reaching the xExtent)
     // Round finished when reaching bottom (endYPos)
-    [SerializeField] float yStep = 0.5f;
+    [SerializeField] float yStep = 0.2f;
     [SerializeField] float startYPos = 4.0f;
-    [SerializeField] float endYPos = 0.0f;
+    [SerializeField] float endYPos = 1.0f;
 
     //--------------------------------------------------------------------------
     public GameObject GetShotPrefab() { return shotPrefab; }
@@ -53,10 +53,14 @@ public class EnemyContainer : MonoBehaviour
         gameSession.AddPoints(points);
 
         // Adjust speed (speed up as less enemies available)
+        // Speedup begins only after half the enemies are gone
         int numRows = enemyTypeByRow.Count;
-        float maxEnemies = numRows * numEnemiesPerRow;
-        float t = 1.0f - (numActiveEnemies / maxEnemies);
-        currentSpeed = Mathf.Lerp(initalSpeed, maxSpeed, t);
+        float halfMaxEnemies = (numRows * numEnemiesPerRow) / 2;
+        if (numActiveEnemies < halfMaxEnemies)
+        {
+            float t = 1.0f - (numActiveEnemies / halfMaxEnemies);
+            currentSpeed = Mathf.Lerp(initalSpeed, maxSpeed, t);
+        }
 
         if (numActiveEnemies <= 0)
         {
