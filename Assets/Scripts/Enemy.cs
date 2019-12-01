@@ -8,8 +8,12 @@ public class Enemy : MonoBehaviour
     //--------------------------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
+        // Enemies only get destroyed by shots
+        if (other.tag == "shot")
+        {
+            OnDestroyed();
+        }
         Destroy(other.gameObject);
-        OnDestroyed();
     }
 
     //--------------------------------------------------------------------------
