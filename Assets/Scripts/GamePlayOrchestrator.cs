@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GamePlayOrchestrator : MonoBehaviour
 {
     [SerializeField] EnemyContainer enemyContainer = null;
-    [SerializeField] Boss boss = null;
+    [SerializeField] Boss bossPrefab = null;
+    [SerializeField] float delayToRestartS = 0.5f;
+    Boss boss = null;
 
     //--------------------------------------------------------------------------
     void Start()
@@ -16,14 +19,39 @@ public class GamePlayOrchestrator : MonoBehaviour
     {
         enemyContainer.gameObject.SetActive(true);
         enemyContainer.InitRound();
-        boss.gameObject.SetActive(false);
+    }
+
+    //--------------------------------------------------------------------------
+    public void OnWaveDefeated()
+    {
+        enemyContainer.gameObject.SetActive(false);
+        StartEnemyBoss();
     }
 
     //--------------------------------------------------------------------------
     public void StartEnemyBoss()
     {
-        enemyContainer.gameObject.SetActive(false);
-        boss.gameObject.SetActive(true);
+        boss = Instantiate(bossPrefab);
+    }
+
+    //--------------------------------------------------------------------------
+    public void OnBossDefeated()
+    {
+        float deathDelay = boss.GetDeathTimeInSeconds();
+        foreach (Transform child in boss.transform)
+        {
+            GameObject.Destroy(child.gameObject, deathDelay);
+        }
+        Destroy(boss, deathDelay);
+
+        StartCoroutine(WaitThenRestartWaves(deathDelay + delayToRestartS));
+    }
+
+    //--------------------------------------------------------------------------
+    IEnumerator WaitThenRestartWaves(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartEnemyWaves();
     }
 
     //--------------------------------------------------------------------------

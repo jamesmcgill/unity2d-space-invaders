@@ -60,7 +60,7 @@ public class EnemyContainer : MonoBehaviour
 
         if (numActiveEnemies <= 0)
         {
-            FindObjectOfType<GamePlayOrchestrator>()?.StartEnemyBoss();
+            FindObjectOfType<GamePlayOrchestrator>()?.OnWaveDefeated();
         }
     }
 

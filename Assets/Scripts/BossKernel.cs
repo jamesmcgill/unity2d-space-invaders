@@ -71,7 +71,8 @@ public class BossKernel : MonoBehaviour
         // Enemies only get destroyed by shots
         if (other.tag == "shot")
         {
-            FindObjectOfType<GamePlayOrchestrator>()?.StartEnemyWaves();
+            Destroy(gameObject);
+            FindObjectOfType<GamePlayOrchestrator>()?.OnBossDefeated();
         }
         Destroy(other.gameObject);
     }

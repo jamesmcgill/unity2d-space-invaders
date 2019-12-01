@@ -6,6 +6,10 @@ public class Boss : MonoBehaviour
     [SerializeField] float startYPos = 4.0f;
     [SerializeField] float endYPos = 0.0f;
     [SerializeField] float speed = 1.0f;
+    [SerializeField] float deathTimeInSeconds = 0.5f;
+
+    //--------------------------------------------------------------------------
+    public float GetDeathTimeInSeconds() { return deathTimeInSeconds; }
 
     //--------------------------------------------------------------------------
     void Start()
