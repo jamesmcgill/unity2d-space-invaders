@@ -24,19 +24,6 @@ public class Level : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------
-    public void LoadMainMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    //--------------------------------------------------------------------------
-    public void LoadGame()
-    {
-        FindObjectOfType<GameSession>().ResetGame();
-        SceneManager.LoadScene("Playing");
-    }
-
-    //--------------------------------------------------------------------------
     public void LoadGameOver()
     {
         StartCoroutine(WaitThenLoadScene(delayUntilNextScene, "GameOver"));

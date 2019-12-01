@@ -28,15 +28,15 @@ public class GameSession : MonoBehaviour
     //--------------------------------------------------------------------------
     private void Start()
     {
-        currentScore = 0;
-        currentLives = initialLives;
-        extraLifeCounter = 0;
+        ResetGame();
     }
 
     //--------------------------------------------------------------------------
     public void ResetGame()
     {
-        Destroy(gameObject);
+        currentScore = 0;
+        currentLives = initialLives;
+        extraLifeCounter = 0;
     }
 
     //--------------------------------------------------------------------------

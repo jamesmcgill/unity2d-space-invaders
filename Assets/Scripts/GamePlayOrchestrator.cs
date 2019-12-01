@@ -11,6 +11,7 @@ public class GamePlayOrchestrator : MonoBehaviour
     //--------------------------------------------------------------------------
     void Start()
     {
+        FindObjectOfType<GameSession>().ResetGame();
         StartEnemyWaves();
     }
 
