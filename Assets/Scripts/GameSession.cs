@@ -87,7 +87,6 @@ public class GameSession : MonoBehaviour
     public int IncrementLivesLeft()
     {
         return ++currentLives;
-
     }
 
     //--------------------------------------------------------------------------

@@ -11,13 +11,13 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] int numEnemiesPerRow = 11;
     [SerializeField] float spacingX = 0.8f;
     [SerializeField] float spacingY = 0.8f;
-    [SerializeField] GameObject shotPrefab = null;
     [SerializeField] GameObject explosionPrefab = null;
     [SerializeField] float explosionLifeTime = 4.0f;
     Enemy[,] enemies;
     int numActiveEnemies;
 
     [Header("Shot timer")]
+    [SerializeField] GameObject shotPrefab = null;
     [SerializeField] float minTimeBetweenShots = 0.2f;
     [SerializeField] float maxTimeBetweenShots = 1.5f;
     [SerializeField] float shotSpeed = 10.0f;
@@ -60,8 +60,7 @@ public class EnemyContainer : MonoBehaviour
 
         if (numActiveEnemies <= 0)
         {
-            // TODO: Handle clearing the round
-            InitRound();
+            FindObjectOfType<GamePlayOrchestrator>()?.StartEnemyBoss();
         }
     }
 
@@ -69,10 +68,16 @@ public class EnemyContainer : MonoBehaviour
     void Start()
     {
         gameSession = FindObjectOfType<GameSession>();
+    }
 
-        // Create and position enemy ships
+    //--------------------------------------------------------------------------
+    // Create and position enemy ships
+    //--------------------------------------------------------------------------
+    void CreateEnemies()
+    {
         int numRows = enemyTypeByRow.Count;
         enemies = new Enemy[numRows, numEnemiesPerRow];
+
         for (int row = 0; row < numRows; row++)
         {
             for (int col = 0; col < numEnemiesPerRow; col++)
@@ -84,13 +89,14 @@ public class EnemyContainer : MonoBehaviour
                 enemies[row, col].transform.parent = this.transform;
             }
         }
-
-        InitRound();
     }
 
     //--------------------------------------------------------------------------
-    void InitRound()
+    public void InitRound()
     {
+        transform.position = new Vector2(0.0f, 0.0f);
+        CreateEnemies();
+
         ResetShotCounter();
 
         currentSpeed = initalSpeed;
@@ -125,8 +131,9 @@ public class EnemyContainer : MonoBehaviour
         var deltaX = Time.deltaTime * currentSpeed * currentXDirection;
         var newXPos = transform.position.x + deltaX;
         var newYPos = transform.position.y;
-        if (Mathf.Abs(newXPos) > xExtent)
+        if (Mathf.Abs(newXPos) >= xExtent)
         {
+            newXPos = transform.position.x; // Don't move out of extent
             currentXDirection *= -1.0f; // Invert movement direction
             newYPos -= yStep;
             if (newYPos < endYPos) // Trigger end of round
