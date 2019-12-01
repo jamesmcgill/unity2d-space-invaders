@@ -2,16 +2,14 @@
 
 public class Enemy : MonoBehaviour
 {
-    public int pointsPerHit = 0;
+    [SerializeField] int points = 0;
     public EnemyContainer container;
 
     //--------------------------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
-        OnDestroyed();
-        Destroy(gameObject);
         Destroy(other.gameObject);
-        container.OnEnemyDestroyed();
+        OnDestroyed();
     }
 
     //--------------------------------------------------------------------------
@@ -22,6 +20,9 @@ public class Enemy : MonoBehaviour
             transform.position,
             transform.rotation);
         Destroy(explosion, container.GetExplosionLifeTime());
+
+        Destroy(gameObject);
+        container.OnEnemyDestroyed(points);
     }
 
     //--------------------------------------------------------------------------

@@ -4,6 +4,8 @@ using UnityEngine;
 public class EnemyContainer : MonoBehaviour
 {
     //--------------------------------------------------------------------------
+    [SerializeField] GameSession gameSession;
+
     [Header("Enemies")]
     [SerializeField] List<Enemy> enemyTypeByRow = new List<Enemy>();
     [SerializeField] int numEnemiesPerRow = 11;
@@ -45,8 +47,10 @@ public class EnemyContainer : MonoBehaviour
     public float GetExplosionLifeTime() { return explosionLifeTime; }
 
     //--------------------------------------------------------------------------
-    public void OnEnemyDestroyed()
+    public void OnEnemyDestroyed(int points)
     {
+        gameSession.AddPoints(points);
+
         --numActiveEnemies;
 
         // Adjust speed (speed up as less enemies available)
@@ -65,6 +69,8 @@ public class EnemyContainer : MonoBehaviour
     //--------------------------------------------------------------------------
     void Start()
     {
+        gameSession = FindObjectOfType<GameSession>();
+
         // Create and position enemy ships
         int numRows = enemyTypeByRow.Count;
         enemies = new Enemy[numRows, numEnemiesPerRow];
